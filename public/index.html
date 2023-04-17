@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SmartTC - Trash Can List</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+        .full {
+            background-color: red;
+        }
+        .not-full {
+            background-color: green;
+        }
+        /* Style for user ID */
+        .user-id {
+            float: right;
+            margin-top: 10px;
+            margin-right: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="user-id">User ID: #123456</div>
+    <h1>SmartTC - Trash Can List</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>City</th>
+                <th>Current Weight</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody id="trashcan-table-body"></tbody>
+    </table>
+    <script>
+        fetch('/api/trashcans')
+            .then(response => response.json())
+            .then(trashCans => {
+                const tableBody = document.getElementById('trashcan-table-body');
+                trashCans.forEach(trashCan => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${trashCan.id}</td>
+                        <td>${trashCan.city}</td>
+                        <td>${trashCan.weight}</td>
+                        <td>
+                            <span class="indicator ${trashCan.isFull ? 'full' : 'not-full'}"></span>
+                            ${trashCan.isFull ? 'Full' : 'Not Full'}
+                        </td>`;
+                        tableBody.appendChild(row);
+                });
+            }).catch(error => console.error(error));
+        </script>
+    </body>
+</html>
